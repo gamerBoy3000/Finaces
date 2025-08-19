@@ -1,4 +1,4 @@
-import Crud  # Your Crud.py should contain the actual data-handling functions
+import crud  # Your crud.py should contain the actual data-handling functions
 
 def display_menu():
     """Presents the main menu options to the user."""
@@ -29,21 +29,21 @@ def main():
         if choice == "1":
             details = get_transaction_details()
             if details:
-                Crud.add_transaction(details)
+                crud.add_transaction(details)
         elif choice == "2":
-            Crud.view_transactions()
+            crud.view_transactions()
         elif choice == "3":
             try:
                 txn_id = int(input("Enter the transaction ID to update: "))
                 details = get_transaction_details()
                 if details:
-                    Crud.update_transaction(txn_id, details)
+                    crud.update_transaction(txn_id, details)
             except ValueError:
                 print("Invalid ID format.")
         elif choice == "4":
             try:
                 txn_id = int(input("Enter the transaction ID to delete: "))
-                Crud.delete_transaction(txn_id)
+                crud.delete_transaction(txn_id)
             except ValueError:
                 print("Invalid ID format.")
         elif choice == "5":

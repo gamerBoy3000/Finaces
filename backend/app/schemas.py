@@ -1,36 +1,54 @@
-from pydantic import BaseModel, field_validator
-from typing import Optional, List
+# backend/app/schemas.py
+from pydantic import BaseModel, Field, ConfigDict, field_validator
+from typing import Optional, List, Literal
 from datetime import date
-from decimal import Decimal, ROUND_HALF_UP
 
+TxnType = Literal["expense", "income", "transfer"]
+
+# ---- Accounts ----
 class AccountBase(BaseModel):
     name: str
     type: str = "cash"
 
 class AccountCreate(AccountBase):
-    id: int
-    class Config:
-        from_attributes = True
+    pass
 
+class AccountOut(AccountBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)
+
+# ---- Categories ----
 class CategoryBase(BaseModel):
     name: str
-    kind: str = "expense" #expense or income
+    kind: Literal["expense", "income"] = "expense"
 
 class CategoryCreate(CategoryBase):
     pass
 
-class Category(CategoryBase):
+class CategoryOut(CategoryBase):
     id: int
-    class Config:
-        from_attributes = True
-    
-class TransactionBase(BaseModel):
-    data: date
-    description:str
-    amount: Decimal
-    type: str # expense, income,, transfer
-    account_id: int
+    model_config = ConfigDict(from_attributes=True)
 
-class TransactionResponse(TransactionCreate):
+# ---- Transactions ----
+class TransactionBase(BaseModel):
+    date: date = Field(default_factory=date.today)
+    description: Optional[str] = None
+    amount: float
+    type: TxnType
+    account_id: int
+    category_id: Optional[int] = None
+    tags: Optional[List[str]] = None
+    transfer_group: Optional[str] = None
+
+    @field_validator("amount")
+    def amount_not_zero(cls, v: float):
+        if v == 0:
+            raise ValueError("amount cannot be zero")
+        return v
+
+class TransactionCreate(TransactionBase):
+    pass
+
+class TransactionOut(TransactionBase):
     id: int
-    date: datetime
+    model_config = ConfigDict(from_attributes=True)

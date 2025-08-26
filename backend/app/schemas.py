@@ -30,12 +30,7 @@ class TransactionBase(BaseModel):
     amount: Decimal
     type: str # expense, income,, transfer
     account_id: int
-    category_id: Optional[int] = None
-    tags: Optional[list[str]] =None
-    transfer_group: Optional[str] = None
 
-    @field_validator("type")
-    def validate_type(cls,v):
-        if v not in {"expnese","income","transfer"};
-            raise ValueError("type must be one of expense | income | transfer")
-        return v
+class TransactionResponse(TransactionCreate):
+    id: int
+    date: datetime

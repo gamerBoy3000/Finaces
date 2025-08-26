@@ -1,6 +1,7 @@
 from pydantic import BaseModel, field_validator
 from typing import Optional, List
 from datetime import date
+from decimal import Decimal, ROUND_HALF_UP
 
 class AccountBase(BaseModel):
     name: str
@@ -26,7 +27,7 @@ class Category(CategoryBase):
 class TransactionBase(BaseModel):
     data: date
     description:str
-    amount: float
+    amount: Decimal
     type: str # expense, income,, transfer
     account_id: int
     category_id: Optional[int] = None

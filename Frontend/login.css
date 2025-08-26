@@ -1,0 +1,85 @@
+/*
+ * Overall page layout: Centers the form in the middle of the screen.
+ * Using flexbox is a modern, reliable way to achieve this.
+ */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #0fe29c; /* A light, neutral background color */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/*
+ * Styles for the login form container.
+ * Gives it a clean, professional look with a card-like appearance.
+ */
+.login-container {
+    background-color: #6a50be; /* White background for the form itself */
+    padding: 2.5em; /* Ample space inside the container */
+    border-radius: 12px; /* Rounded corners for a softer look */
+    box-shadow: 0 4px 20px rgba(235, 225, 225, 0.1); /* Subtle shadow for depth */
+    width: 100%;
+    max-width: 400px; /* Limits the form's width on larger screens */
+    box-sizing: border-box; /* Ensures padding doesn't affect the width */
+}
+
+/*
+ * Styles for the login form's header (e.g., "Log In" title).
+ */
+.login-container h2 {
+    text-align: center;
+    color: #d3d87f; /* Dark gray for the text */
+    margin-bottom: 1em;
+}
+
+/*
+ * Styles for the input fields and their containers.
+ */
+.input-group {
+    margin-bottom: 1.5em; /* Space between each input field */
+}
+
+.input-group label {
+    display: block; /* Puts the label on its own line */
+    margin-bottom: 0.5em;
+    font-weight: 600; /* Makes the label text a bit bolder */
+    color: #391868;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 6px; /* Slightly rounded corners for the input fields */
+    font-size: 1em;
+    transition: border-color 0.3s;
+    box-sizing: border-box; /* Ensures consistency in width */
+}
+
+.input-group input:focus {
+    border-color: #007bff; /* Highlight color on focus */
+    outline: none; /* Removes the default browser outline */
+}
+
+/*
+ * Styles for the login button.
+ */
+.login-btn {
+    width: 100%;
+    padding: 1em;
+    background-color: #007bff; /* A prominent blue color */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

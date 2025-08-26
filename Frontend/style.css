@@ -1,0 +1,16 @@
+:root {
+  /* Primary colors for branding and key actions */
+  --primary-color: #007bff; /* Blue for buttons, links, etc. */
+  --primary-dark: #0056b3;
+
+  /* Accent colors for success, warnings, and errors */
+  --success-color: #28a745; /* Green for success messages */
+  --error-color: #dc3545; /* Red for errors */
+
+  /* Neutral colors for text and backgrounds */
+  --background-color: #f8f9fa; /* Light gray for the main background */
+  --card-background: #ffffff; /* White for cards and containers */
+  --text-color: #343a40; /* Dark gray for body text */
+  --secondary-text: #6c757d; /* Lighter gray for secondary text */
+  --border-color: #dee2e6; /* Light gray for borders */
+}s

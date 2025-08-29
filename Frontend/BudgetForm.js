@@ -49,4 +49,4 @@ const BudgetForm = ({ onSubmit }) => {
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placehold
+          placeholder="e.g., 1000"

@@ -1,57 +1,26 @@
-import crud  # Your crud.py should contain the actual data-handling functions
+from fastapi import FastAPI
+from .database import Base, engine
+from .routers import accounts, categories, transactions, budgets, reports
+from fastapi.middleware.cors import CORSMiddleware
 
-def display_menu():
-    """Presents the main menu options to the user."""
-    print("\n--- Personal Finance Tracker ---")
-    print("1. Add Transaction")
-    print("2. View Transactions")
-    print("3. Update Transaction")
-    print("4. Delete Transaction")
-    print("5. Exit")
+Base.metadata.create_all(bind=engine)
 
-def get_transaction_details():
-    """Prompts the user for transaction details."""
-    try:
-        amount = float(input("Enter amount: "))
-        category = input("Enter category (e.g., Food, Rent, Salary): ")
-        description = input("Enter description: ")
-        return {"amount": amount, "category": category, "description": description}
-    except ValueError:
-        print("Invalid input. Please enter a valid number for amount.")
-        return None
+app = FastAPI(title="Personal Finance Tracker API", version="0.1.0")
 
-def main():
-    """Main loop for the finance tracker application."""
-    while True:
-        display_menu()
-        choice = input("Choose an option (1-5): ")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-        if choice == "1":
-            details = get_transaction_details()
-            if details:
-                crud.add_transaction(details)
-        elif choice == "2":
-            crud.view_transactions()
-        elif choice == "3":
-            try:
-                txn_id = int(input("Enter the transaction ID to update: "))
-                details = get_transaction_details()
-                if details:
-                    crud.update_transaction(txn_id, details)
-            except ValueError:
-                print("Invalid ID format.")
-        elif choice == "4":
-            try:
-                txn_id = int(input("Enter the transaction ID to delete: "))
-                crud.delete_transaction(txn_id)
-            except ValueError:
-                print("Invalid ID format.")
-        elif choice == "5":
-            print("Exiting... Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please select from 1 to 5.")
+app.include_router(accounts.router)
+app.include_router(categories.router)
+app.include_router(transactions.router)
+app.include_router(budgets.router)
+app.include_router(reports.router)
 
-if __name__ == "__main__":
-    main()
-
+@app.get("/health")
+def health():
+    return {"status": "ok"}

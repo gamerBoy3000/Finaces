@@ -1,54 +1,77 @@
-# backend/app/schemas.py
-from pydantic import BaseModel, Field, ConfigDict, field_validator
-from typing import Optional, List, Literal
+from pydantic import BaseModel, field_validator
+from typing import Optional
 from datetime import date
 
-TxnType = Literal["expense", "income", "transfer"]
-
-# ---- Accounts ----
 class AccountBase(BaseModel):
     name: str
     type: str = "cash"
 
-class AccountCreate(AccountBase):
-    pass
+class AccountCreate(AccountBase): pass
 
-class AccountOut(AccountBase):
+class Account(AccountBase):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+    class Config: from_attributes = True
 
-# ---- Categories ----
 class CategoryBase(BaseModel):
     name: str
-    kind: Literal["expense", "income"] = "expense"
+    kind: str = "expense"  # expense or income
 
-class CategoryCreate(CategoryBase):
-    pass
+class CategoryCreate(CategoryBase): pass
 
-class CategoryOut(CategoryBase):
+class Category(CategoryBase):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+    class Config: from_attributes = True
 
-# ---- Transactions ----
 class TransactionBase(BaseModel):
-    date: date = Field(default_factory=date.today)
-    description: Optional[str] = None
-    amount: float
-    type: TxnType
+    date: date
+    description: str
+    amount: float  # expose as float; stored as cents
+    type: str  # expense, income, transfer
     account_id: int
     category_id: Optional[int] = None
-    tags: Optional[List[str]] = None
+    tags: Optional[list[str]] = None
     transfer_group: Optional[str] = None
 
-    @field_validator("amount")
-    def amount_not_zero(cls, v: float):
-        if v == 0:
-            raise ValueError("amount cannot be zero")
+    @field_validator("type")
+    def validate_type(cls, v):
+        if v not in {"expense", "income", "transfer"}:
+            raise ValueError("type must be one of expense|income|transfer")
         return v
 
-class TransactionCreate(TransactionBase):
-    pass
+class TransactionCreate(TransactionBase): pass
 
-class TransactionOut(TransactionBase):
+class Transaction(TransactionBase):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+    class Config: from_attributes = True
+
+class BudgetBase(BaseModel):
+    month: str  # YYYY-MM
+    category_id: int
+    amount: float
+
+class BudgetCreate(BudgetBase): pass
+
+class Budget(BudgetBase):
+    id: int
+    class Config: from_attributes = True
+
+class MonthlyCategorySummary(BaseModel):
+    category: str
+    spent: float
+    income: float
+
+class MonthlySummary(BaseModel):
+    month: str
+    total_expense: float
+    total_income: float
+    by_category: list[MonthlyCategorySummary]
+
+class BudgetProgressItem(BaseModel):
+    category: str
+    budget: float
+    spent: float
+    remaining: float
+
+class BudgetProgress(BaseModel):
+    month: str
+    items: list[BudgetProgressItem]
